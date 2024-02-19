@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github/bottom_search_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,35 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 60,
-        width: double.infinity,
-        child: ColoredBox(
-          color: Colors.lightBlue.shade50,
-          child: Row(
-            children: [
-              Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextField(
-                        controller: textController,
-                      ))),
-              SizedBox(
-                width: 64,
-                child: IconButton(
-                  onPressed: () {
-                    print("Serach for ${textController.text}");
-                  },
-                  icon: const Icon(
-                    Icons.search,
-                    color: Colors.blue,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: BottomSearchBar(),
     );
   }
 }
