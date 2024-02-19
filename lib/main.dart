@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github/bottom_search_bar.dart';
+import 'package:github/repo_details.dart';
+import 'package:github/repo_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,19 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TextEditingController textController;
-
-  @override
-  void initState() {
-    super.initState();
-    textController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    super.dispose();
-  }
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +42,17 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
-      ),
+      body: Navigator(key: _navigatorKey, onGenerateRoute: generateRoute,),
       bottomNavigationBar: BottomSearchBar(),
     );
+  }
+
+  Route<dynamic> generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case "details":
+        return MaterialPageRoute(builder: (context) => RepoDetails());
+      default:
+        return MaterialPageRoute(builder: (context) => RepoList(_navigatorKey));
+    }
   }
 }
