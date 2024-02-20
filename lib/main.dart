@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github/bottom_search_bar.dart';
-import 'package:github/repo_details.dart';
+import 'package:github/issues.dart';
 import 'package:github/repo_list.dart';
+import 'package:github/store.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,6 +37,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
+  void initState() {
+    super.initState();
+    Store.main.navigator = _navigatorKey;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -49,10 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case "details":
-        return MaterialPageRoute(builder: (context) => RepoDetails());
+      case "issues":
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (context) => Issues(repoName: args["name"]));
+      case "repos":
       default:
-        return MaterialPageRoute(builder: (context) => RepoList(_navigatorKey));
+        return MaterialPageRoute(builder: (context) => RepoList());
     }
   }
 }

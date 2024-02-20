@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:github/api.dart';
+import 'package:github/store.dart';
 import 'package:github/styles.dart';
 
 class BottomSearchBar extends StatefulWidget {
@@ -42,7 +44,8 @@ class _SearchBarState extends State<BottomSearchBar> {
               width: 64,
               child: IconButton(
                 onPressed: () {
-                  print("Search for ${textController.text}");
+                  Store.main.search(textController.text);
+                  Store.main.navigator.currentState?.pushReplacementNamed("repos");
                 },
                 icon: const Icon(
                   Icons.search,
