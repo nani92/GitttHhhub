@@ -30,3 +30,6 @@ var descriptionTextStyle = const TextStyle(
   fontSize: 16,
 );
 
+const double spacing_1 = 8;
+const double spacing_2 = 16;
+

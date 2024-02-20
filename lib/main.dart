@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:github/bottom_search_bar.dart';
-import 'package:github/issues.dart';
-import 'package:github/pulls.dart';
-import 'package:github/repo_list.dart';
-import 'package:github/store.dart';
-import 'package:github/welcome.dart';
+import 'package:github/widgets/bottom_search_bar.dart';
+import 'package:github/screens/issues.dart';
+import 'package:github/screens/pulls.dart';
+import 'package:github/screens/repo_list.dart';
+import 'package:github/core/store.dart';
+import 'package:github/screens/welcome.dart';
 
 void main() {
   runApp(const MyApp());

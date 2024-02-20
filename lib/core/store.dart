@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:github/api.dart';
-import 'package:github/events.dart';
+import 'package:github/core/api.dart';
+import 'package:github/core/events.dart';
 import 'package:super_store/super_store.dart';
 
 class Store {

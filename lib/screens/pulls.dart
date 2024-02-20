@@ -2,22 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:github/avatar.dart';
-import 'package:github/events.dart';
-import 'package:github/loading_overlay.dart';
-import 'package:github/store.dart';
+import 'package:github/widgets/avatar.dart';
+import 'package:github/core/events.dart';
+import 'package:github/widgets/loading_overlay.dart';
+import 'package:github/core/store.dart';
 import 'package:github/styles.dart';
 
-class Issues extends StatefulWidget {
+class Pulls extends StatefulWidget {
   final String repoName;
 
-  const Issues({super.key, required this.repoName});
+  const Pulls({super.key, required this.repoName});
 
   @override
-  State<Issues> createState() => _IssuesState();
+  State<Pulls> createState() => _PullsState();
 }
 
-class _IssuesState extends State<Issues> {
+class _PullsState extends State<Pulls> {
   late StreamSubscription<dynamic> storeSubscription;
   List<Map<String, dynamic>> results = [];
   var isLoading = true;
@@ -50,15 +50,19 @@ class _IssuesState extends State<Issues> {
         ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text("Issues for ${widget.repoName}:", style: titleTextStyle,),
+              padding: const EdgeInsets.symmetric(horizontal: spacing_2, vertical: spacing_1),
+              child: Text(
+                "PRs for ${widget.repoName}:",
+                style: titleTextStyle,
+              ),
             ),
             for (var issue in results)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: spacing_2, vertical: spacing_1),
                 child: Card(
                     child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(spacing_1),
                   child: Row(
                     children: [
                       Avatar(
@@ -66,17 +70,27 @@ class _IssuesState extends State<Issues> {
                         size: 50,
                       ),
                       const SizedBox(
-                        width: 16,
+                        width: spacing_2,
                       ),
-                      Expanded(child: Text(issue["title"], style: subtitleTextStyle,)),
+                      Expanded(
+                          child: Text(
+                        issue["title"],
+                        style: subtitleTextStyle,
+                      )),
                     ],
                   ),
                 )),
               )
           ],
         ),
-        if(isLoading)
-          LoadingOverlay()
+        if (results.isEmpty && !isLoading)
+          Center(
+            child: Text(
+              "Sorry no PRs to display",
+              style: subtitleTextStyle,
+            ),
+          ),
+        if (isLoading) LoadingOverlay()
       ],
     );
   }

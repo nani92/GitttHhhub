@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:github/avatar.dart';
-import 'package:github/events.dart';
-import 'package:github/loading_overlay.dart';
-import 'package:github/store.dart';
+import 'package:github/widgets/avatar.dart';
+import 'package:github/core/events.dart';
+import 'package:github/widgets/loading_overlay.dart';
+import 'package:github/core/store.dart';
 import 'package:github/styles.dart';
 
 class RepoList extends StatefulWidget {
@@ -81,7 +81,7 @@ class _ElementState extends State<_ListElement> {
     final entryMap = widget.entryMap;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: spacing_2, vertical: spacing_1),
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -90,7 +90,7 @@ class _ElementState extends State<_ListElement> {
         },
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(spacing_1),
             child: Column(
               children: [
                 _ElementTopView(entryMap: entryMap),
@@ -121,7 +121,7 @@ class _ElementTopView extends StatelessWidget {
       children: [
         Avatar(avatarPath: entryMap["owner"]["avatar_url"]),
         const SizedBox(
-          width: 8,
+          width: spacing_1,
         ),
         Expanded(
           child: Column(
@@ -164,7 +164,7 @@ class _ElementDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(
-          height: 8,
+          height: spacing_1,
           width: double.infinity,
         ),
         if (entryMap["description"] != null)
