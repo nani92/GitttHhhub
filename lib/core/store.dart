@@ -21,24 +21,32 @@ class MainSection extends SuperStoreSection {
       final list = value[_KEY_ITEMS] as List<dynamic>;
       final mapList = list.map((e) => RepoData.fromJson(e)).toList();
       Store.main.send(RepositoriesFound(mapList));
+    }).catchError((e) {
+      //TODO handle error
+      print(e.toString());
+      Store.main.send(RepositoriesFound([]));
     });
   }
 
   void getIssues(String link) {
     Api.getList(link.split('{/number}').first).then((value) {
-      final mapList = (value)
-          .map((e) => e as Map<String, dynamic>)
-          .toList();
+      final mapList = (value).map((e) => e as Map<String, dynamic>).toList();
       Store.main.send(IssuesReceived(mapList));
+    }).catchError((e) {
+      //TODO handle error
+      print(e.toString());
+      Store.main.send(IssuesReceived([]));
     });
   }
 
   void getPulls(String link) {
     Api.getList(link.split('{/number}').first).then((value) {
-      final mapList = (value)
-          .map((e) => e as Map<String, dynamic>)
-          .toList();
-      Store.main.send(IssuesReceived(mapList));
+      final mapList = (value).map((e) => e as Map<String, dynamic>).toList();
+      Store.main.send(PullsReceived(mapList));
+    }).catchError((e) {
+      //TODO handle error
+      print(e.toString());
+      Store.main.send(PullsReceived([]));
     });
   }
 }

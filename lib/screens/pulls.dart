@@ -26,10 +26,10 @@ class _PullsState extends State<Pulls> {
     super.initState();
     storeSubscription = Store.main.listen((event) {
       switch (event.runtimeType) {
-        case IssuesReceived:
+        case PullsReceived:
           setState(() {
             isLoading = false;
-            results = (event as IssuesReceived).list;
+            results = (event as PullsReceived).list;
           });
           break;
       }

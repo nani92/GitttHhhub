@@ -5,6 +5,7 @@ import 'package:github/screens/pulls.dart';
 import 'package:github/screens/repo_list.dart';
 import 'package:github/core/store.dart';
 import 'package:github/screens/welcome.dart';
+import 'package:navigation_history_observer/navigation_history_observer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,22 +38,50 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  var canPopToExit = true;
+  final NavigationHistoryObserver historyObserver = NavigationHistoryObserver();
 
   @override
   void initState() {
     super.initState();
     Store.main.navigator = _navigatorKey;
+    historyObserver.historyChangeStream.listen((change) => setState(() {
+      if(historyObserver.history.length <= 1) {
+        setState(() {
+          canPopToExit = true;
+        });
+      } else {
+        setState(() {
+          canPopToExit = false;
+        });
+      }
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+    return PopScope(
+      canPop: canPopToExit,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+
+        _navigatorKey.currentState?.pop();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+        ),
+        body: Navigator(
+          key: _navigatorKey,
+          onGenerateRoute: generateRoute,
+          observers: [historyObserver],
+        ),
+        bottomNavigationBar: const BottomSearchBar(),
       ),
-      body: Navigator(key: _navigatorKey, onGenerateRoute: generateRoute,),
-      bottomNavigationBar: BottomSearchBar(),
     );
   }
 
@@ -60,12 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (settings.name) {
       case 'issues':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => Issues(repoName: args['name']));
+        return MaterialPageRoute(
+            builder: (context) => Issues(repoName: args['name']));
       case 'pulls':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => Pulls(repoName: args['name']));
+        return MaterialPageRoute(
+            builder: (context) => Pulls(repoName: args['name']));
       case 'repos':
-        return MaterialPageRoute(builder: (context) => RepoList());
+        return MaterialPageRoute(builder: (context) => const RepoList());
       default:
         return MaterialPageRoute(builder: (context) => Welcome());
     }
