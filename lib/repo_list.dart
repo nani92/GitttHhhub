@@ -15,7 +15,7 @@ class RepoList extends StatefulWidget {
 class _RepoListState extends State<RepoList> {
   late StreamSubscription<dynamic> storeSubscription;
   List<Map<String, dynamic>> results = [];
-  var isLoading = false;
+  var isLoading = true;
 
   @override
   void initState() {
@@ -52,7 +52,13 @@ class _RepoListState extends State<RepoList> {
             for (var result in results) _ListElement(entryMap: result),
           ],
         ),
-        if (isLoading) LoadingOverlay()
+        if (isLoading) LoadingOverlay(),
+        if (results.isEmpty && !isLoading)
+          const Center(
+              child: Text(
+            "No repo found!",
+            style: titleTextStyle,
+          ))
       ],
     );
   }
@@ -72,7 +78,6 @@ class _ElementState extends State<_ListElement> {
 
   @override
   Widget build(BuildContext context) {
-    print("Element: ${widget.entryMap}");
     final entryMap = widget.entryMap;
 
     return Padding(
@@ -123,19 +128,22 @@ class _ElementTopView extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                entryMap["name"].toString(),
-                style: titleTextStyle,
-              ),
-              Text(
-                entryMap["full_name"].toString(),
-                style: subtitleTextStyle,
-                overflow: TextOverflow.fade,
-              ),
-              Text(
-                entryMap["language"].toString(),
-                style: languageTextStyle,
-              )
+              if (entryMap["name"] != null)
+                Text(
+                  entryMap["name"],
+                  style: titleTextStyle,
+                ),
+              if (entryMap["full_name"] != null)
+                Text(
+                  entryMap["full_name"],
+                  style: subtitleTextStyle,
+                  overflow: TextOverflow.fade,
+                ),
+              if (entryMap["language"] != null)
+                Text(
+                  entryMap["language"],
+                  style: languageTextStyle,
+                )
             ],
           ),
         ),
@@ -159,14 +167,16 @@ class _ElementDetails extends StatelessWidget {
           height: 8,
           width: double.infinity,
         ),
-        Text(
-          entryMap["description"],
-          style: descriptionTextStyle,
-        ),
+        if (entryMap["description"] != null)
+          Text(
+            entryMap["description"],
+            style: descriptionTextStyle,
+          ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             _Issues(entryMap),
+            _Pulls(entryMap),
           ],
         ),
       ],
@@ -193,5 +203,25 @@ class _Issues extends StatelessWidget {
             child: const Text("See issues!"),
           )
         : const SizedBox();
+  }
+}
+
+class _Pulls extends StatelessWidget {
+  final Map<String, dynamic> entryMap;
+
+  _Pulls(this.entryMap);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Store.main.getPulls(entryMap["pulls_url"]);
+        Store.main.navigator.currentState?.pushNamed(
+          "pulls",
+          arguments: {"name": entryMap["name"]},
+        );
+      },
+      child: const Text("See PRs!"),
+    );
   }
 }

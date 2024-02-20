@@ -33,6 +33,15 @@ class MainSection extends SuperStoreSection {
       Store.main.send(IssuesReceived(mapList));
     });
   }
+
+  void getPulls(String link) {
+    Api.getList(link.split("{/number}").first).then((value) {
+      final mapList = (value)
+          .map((e) => e as Map<String, dynamic>)
+          .toList();
+      Store.main.send(IssuesReceived(mapList));
+    });
+  }
 }
 
 const _KEY_ITEMS = "items";

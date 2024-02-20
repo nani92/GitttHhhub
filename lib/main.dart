@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:github/bottom_search_bar.dart';
 import 'package:github/issues.dart';
+import 'package:github/pulls.dart';
 import 'package:github/repo_list.dart';
 import 'package:github/store.dart';
+import 'package:github/welcome.dart';
 
 void main() {
   runApp(const MyApp());
@@ -59,9 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
       case "issues":
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(builder: (context) => Issues(repoName: args["name"]));
+      case "pulls":
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (context) => Pulls(repoName: args["name"]));
       case "repos":
-      default:
         return MaterialPageRoute(builder: (context) => RepoList());
+      default:
+        return MaterialPageRoute(builder: (context) => Welcome());
     }
   }
 }

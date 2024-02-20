@@ -22,3 +22,12 @@ class IssuesReceived extends Event {
   @override
   get eventName => 'issues_received ${list.length}';
 }
+
+class PullsReceived extends Event {
+  final List<Map<String, dynamic>> list;
+
+  PullsReceived(this.list);
+
+  @override
+  get eventName => 'pulls_received ${list.length}';
+}
