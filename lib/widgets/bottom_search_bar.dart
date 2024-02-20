@@ -15,7 +15,7 @@ class _SearchBarState extends State<BottomSearchBar> {
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    textController = TextEditingController(text: "GitttHhhub");
   }
 
   @override
@@ -40,6 +40,12 @@ class _SearchBarState extends State<BottomSearchBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
                     controller: textController,
+                    onTap: () {
+                      textController.selection = TextSelection(
+                        baseOffset: 0,
+                        extentOffset: textController.value.text.length,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -48,7 +54,8 @@ class _SearchBarState extends State<BottomSearchBar> {
                 child: IconButton(
                   onPressed: () {
                     Store.main.search(textController.text);
-                    Store.main.navigator.currentState?.pushReplacementNamed('repos');
+                    Store.main.navigator.currentState
+                        ?.pushReplacementNamed('repos');
                   },
                   icon: const Icon(
                     Icons.search,
