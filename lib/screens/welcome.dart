@@ -7,7 +7,7 @@ class Welcome extends StatelessWidget {
     return const SizedBox.expand(
       child: Center(
           child: Text(
-        "Type in below to find repository!",
+        'Type in below to find repository!',
         style: titleTextStyle,
       )),
     );

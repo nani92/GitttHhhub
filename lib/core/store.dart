@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:github/core/api.dart';
+import 'package:github/core/data.dart';
 import 'package:github/core/events.dart';
 import 'package:super_store/super_store.dart';
 
@@ -12,7 +11,7 @@ class Store {
 
 class MainSection extends SuperStoreSection {
   @override
-  String get sectionName => "main";
+  String get sectionName => 'main';
   late GlobalKey<NavigatorState> navigator;
 
   void search(String phrase) {
@@ -20,13 +19,13 @@ class MainSection extends SuperStoreSection {
 
     Api.search(phrase).then((value) {
       final list = value[_KEY_ITEMS] as List<dynamic>;
-      final mapList = list.map((e) => e as Map<String, dynamic>).toList();
+      final mapList = list.map((e) => RepoData.fromJson(e)).toList();
       Store.main.send(RepositoriesFound(mapList));
     });
   }
 
   void getIssues(String link) {
-    Api.getList(link.split("{/number}").first).then((value) {
+    Api.getList(link.split('{/number}').first).then((value) {
       final mapList = (value)
           .map((e) => e as Map<String, dynamic>)
           .toList();
@@ -35,7 +34,7 @@ class MainSection extends SuperStoreSection {
   }
 
   void getPulls(String link) {
-    Api.getList(link.split("{/number}").first).then((value) {
+    Api.getList(link.split('{/number}').first).then((value) {
       final mapList = (value)
           .map((e) => e as Map<String, dynamic>)
           .toList();
@@ -44,4 +43,4 @@ class MainSection extends SuperStoreSection {
   }
 }
 
-const _KEY_ITEMS = "items";
+const _KEY_ITEMS = 'items';

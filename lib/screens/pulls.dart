@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github/widgets/avatar.dart';
 import 'package:github/core/events.dart';
@@ -52,7 +51,7 @@ class _PullsState extends State<Pulls> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: spacing_2, vertical: spacing_1),
               child: Text(
-                "PRs for ${widget.repoName}:",
+                'PRs for ${widget.repoName}:',
                 style: titleTextStyle,
               ),
             ),
@@ -66,7 +65,7 @@ class _PullsState extends State<Pulls> {
                   child: Row(
                     children: [
                       Avatar(
-                        avatarPath: issue["user"]["avatar_url"],
+                        avatarPath: issue['user']['avatar_url'],
                         size: 50,
                       ),
                       const SizedBox(
@@ -74,7 +73,7 @@ class _PullsState extends State<Pulls> {
                       ),
                       Expanded(
                           child: Text(
-                        issue["title"],
+                        issue['title'],
                         style: subtitleTextStyle,
                       )),
                     ],
@@ -86,11 +85,11 @@ class _PullsState extends State<Pulls> {
         if (results.isEmpty && !isLoading)
           Center(
             child: Text(
-              "Sorry no PRs to display",
+              'Sorry, no PRs to display',
               style: subtitleTextStyle,
             ),
           ),
-        if (isLoading) LoadingOverlay()
+        if (isLoading) const LoadingOverlay()
       ],
     );
   }

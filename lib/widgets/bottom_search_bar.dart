@@ -45,7 +45,7 @@ class _SearchBarState extends State<BottomSearchBar> {
               child: IconButton(
                 onPressed: () {
                   Store.main.search(textController.text);
-                  Store.main.navigator.currentState?.pushReplacementNamed("repos");
+                  Store.main.navigator.currentState?.pushReplacementNamed('repos');
                 },
                 icon: const Icon(
                   Icons.search,

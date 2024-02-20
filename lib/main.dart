@@ -58,13 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case "issues":
+      case 'issues':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => Issues(repoName: args["name"]));
-      case "pulls":
+        return MaterialPageRoute(builder: (context) => Issues(repoName: args['name']));
+      case 'pulls':
         final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(builder: (context) => Pulls(repoName: args["name"]));
-      case "repos":
+        return MaterialPageRoute(builder: (context) => Pulls(repoName: args['name']));
+      case 'repos':
         return MaterialPageRoute(builder: (context) => RepoList());
       default:
         return MaterialPageRoute(builder: (context) => Welcome());

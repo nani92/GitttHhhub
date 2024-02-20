@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:github/core/data.dart';
 import 'package:github/widgets/avatar.dart';
 import 'package:github/core/events.dart';
 import 'package:github/widgets/loading_overlay.dart';
@@ -8,13 +9,15 @@ import 'package:github/core/store.dart';
 import 'package:github/styles.dart';
 
 class RepoList extends StatefulWidget {
+  const RepoList({super.key});
+
   @override
   State<RepoList> createState() => _RepoListState();
 }
 
 class _RepoListState extends State<RepoList> {
   late StreamSubscription<dynamic> storeSubscription;
-  List<Map<String, dynamic>> results = [];
+  List<RepoData> repos = [];
   var isLoading = true;
 
   @override
@@ -29,7 +32,7 @@ class _RepoListState extends State<RepoList> {
           break;
         case RepositoriesFound:
           setState(() {
-            results = (event as RepositoriesFound).list;
+            repos = (event as RepositoriesFound).list;
             isLoading = false;
           });
           break;
@@ -49,14 +52,14 @@ class _RepoListState extends State<RepoList> {
       children: [
         ListView(
           children: [
-            for (var result in results) _ListElement(entryMap: result),
+            for (var repo in repos) _ListElement(data: repo),
           ],
         ),
-        if (isLoading) LoadingOverlay(),
-        if (results.isEmpty && !isLoading)
+        if (isLoading) const LoadingOverlay(),
+        if (repos.isEmpty && !isLoading)
           const Center(
               child: Text(
-            "No repo found!",
+            'No repo found!',
             style: titleTextStyle,
           ))
       ],
@@ -65,9 +68,9 @@ class _RepoListState extends State<RepoList> {
 }
 
 class _ListElement extends StatefulWidget {
-  final Map<String, dynamic> entryMap;
+  final RepoData data;
 
-  const _ListElement({super.key, required this.entryMap});
+  const _ListElement({super.key, required this.data});
 
   @override
   State<_ListElement> createState() => _ElementState();
@@ -78,7 +81,6 @@ class _ElementState extends State<_ListElement> {
 
   @override
   Widget build(BuildContext context) {
-    final entryMap = widget.entryMap;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: spacing_2, vertical: spacing_1),
@@ -93,11 +95,11 @@ class _ElementState extends State<_ListElement> {
             padding: const EdgeInsets.all(spacing_1),
             child: Column(
               children: [
-                _ElementTopView(entryMap: entryMap),
+                _ElementTopView(data: widget.data),
                 AnimatedSwitcher(
                   duration: const Duration(seconds: 1),
                   child: isExpanded
-                      ? _ElementDetails(entryMap: entryMap)
+                      ? _ElementDetails(data: widget.data)
                       : const SizedBox(),
                 )
               ],
@@ -110,16 +112,16 @@ class _ElementState extends State<_ListElement> {
 }
 
 class _ElementTopView extends StatelessWidget {
-  final Map<String, dynamic> entryMap;
+  final RepoData data;
 
-  const _ElementTopView({super.key, required this.entryMap});
+  const _ElementTopView({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Avatar(avatarPath: entryMap["owner"]["avatar_url"]),
+        Avatar(avatarPath: data.avatar),
         const SizedBox(
           width: spacing_1,
         ),
@@ -128,20 +130,17 @@ class _ElementTopView extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (entryMap["name"] != null)
                 Text(
-                  entryMap["name"],
+                  data.name,
                   style: titleTextStyle,
                 ),
-              if (entryMap["full_name"] != null)
                 Text(
-                  entryMap["full_name"],
+                  data.fullName,
                   style: subtitleTextStyle,
                   overflow: TextOverflow.fade,
                 ),
-              if (entryMap["language"] != null)
                 Text(
-                  entryMap["language"],
+                  data.language,
                   style: languageTextStyle,
                 )
             ],
@@ -153,9 +152,9 @@ class _ElementTopView extends StatelessWidget {
 }
 
 class _ElementDetails extends StatelessWidget {
-  final Map<String, dynamic> entryMap;
+  final RepoData data;
 
-  const _ElementDetails({super.key, required this.entryMap});
+  const _ElementDetails({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -167,16 +166,15 @@ class _ElementDetails extends StatelessWidget {
           height: spacing_1,
           width: double.infinity,
         ),
-        if (entryMap["description"] != null)
           Text(
-            entryMap["description"],
+            data.description,
             style: descriptionTextStyle,
           ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            _Issues(entryMap),
-            _Pulls(entryMap),
+            _Issues(data),
+            _Pulls(data),
           ],
         ),
       ],
@@ -185,43 +183,43 @@ class _ElementDetails extends StatelessWidget {
 }
 
 class _Issues extends StatelessWidget {
-  final Map<String, dynamic> entryMap;
+  final RepoData data;
 
-  _Issues(this.entryMap);
+  _Issues(this.data);
 
   @override
   Widget build(BuildContext context) {
-    return entryMap["open_issues"] > 0
+    return data.hasIssues
         ? TextButton(
             onPressed: () {
-              Store.main.getIssues(entryMap["issues_url"]);
+              Store.main.getIssues(data.issueLink);
               Store.main.navigator.currentState?.pushNamed(
-                "issues",
-                arguments: {"name": entryMap["name"]},
+                'issues',
+                arguments: {'name': data.name},
               );
             },
-            child: const Text("See issues!"),
+            child: const Text('See issues!'),
           )
         : const SizedBox();
   }
 }
 
 class _Pulls extends StatelessWidget {
-  final Map<String, dynamic> entryMap;
+  final RepoData data;
 
-  _Pulls(this.entryMap);
+  _Pulls(this.data);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        Store.main.getPulls(entryMap["pulls_url"]);
+        Store.main.getPulls(data.pullsLink);
         Store.main.navigator.currentState?.pushNamed(
-          "pulls",
-          arguments: {"name": entryMap["name"]},
+          'pulls',
+          arguments: {'name': data.name},
         );
       },
-      child: const Text("See PRs!"),
+      child: const Text('See PRs!'),
     );
   }
 }

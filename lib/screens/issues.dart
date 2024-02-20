@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github/widgets/avatar.dart';
 import 'package:github/core/events.dart';
@@ -51,7 +50,7 @@ class _IssuesState extends State<Issues> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: spacing_2, vertical: spacing_1),
-              child: Text("Issues for ${widget.repoName}:", style: titleTextStyle,),
+              child: Text('Issues for ${widget.repoName}:', style: titleTextStyle,),
             ),
             for (var issue in results)
               Padding(
@@ -62,13 +61,13 @@ class _IssuesState extends State<Issues> {
                   child: Row(
                     children: [
                       Avatar(
-                        avatarPath: issue["user"]["avatar_url"],
+                        avatarPath: issue['user']['avatar_url'],
                         size: 50,
                       ),
                       const SizedBox(
                         width: spacing_2,
                       ),
-                      Expanded(child: Text(issue["title"], style: subtitleTextStyle,)),
+                      Expanded(child: Text(issue['title'], style: subtitleTextStyle,)),
                     ],
                   ),
                 )),

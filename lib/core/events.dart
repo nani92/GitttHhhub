@@ -1,7 +1,8 @@
+import 'package:github/core/data.dart';
 import 'package:super_store/super_store.dart';
 
 class RepositoriesFound extends Event {
-  final List<Map<String, dynamic>> list;
+  final List<RepoData> list;
 
   RepositoriesFound(this.list);
 
